@@ -8,14 +8,14 @@ public class Movement : MonoBehaviour {
     GameObject gobj;
     Vector2 start, end;
     Vector3 tr,ini,mo;
-    int pasos=0, maxPasos=5;
+    public int pasos=0, maxPasos;
     float disx, disy;
     void Update () {
         Controlar();
     }
     void Controlar()
     {
-        if (Input.touchCount > 0)   //controles touch, no hace nada si no detecta al menos un dedo
+        if (Input.touchCount > 0 && gobj==null)   //controles touch, no hace nada si no detecta al menos un dedo
         {
             if (Input.GetTouch(0).phase == TouchPhase.Began) //Cuando detecta el dedo lanza un ray 
             {
@@ -29,56 +29,62 @@ public class Movement : MonoBehaviour {
             }
             else if (Input.GetTouch(0).phase == TouchPhase.Moved && gobj)//Cuando el dedo se empieza a mover sobre la pantalla
             {
-                RaycastHit2D hit2D = GenerarRay();
-                if (hit2D.collider == null)//Para comprobar que no choque con obstaculos, se genera un ray en la posicion del dedo y si esta golpea signica que pega con un obstaculo o enemigo
+                start = gobj.transform.position;//la posicion del fantasma
+                end = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);//la posicion del dedo
+                disx = Mathf.RoundToInt(end.x - start.x);//se verica las diferencias en las posiciones y cuando se
+                disy = Mathf.RoundToInt(end.y - start.y);//acerca a uno, es cuando se mueve al siguiente tile
+                if (disx == 1 || disx == -1)
                 {
-                    start = gobj.transform.position;//la posicion del fantasma
-                    end = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);//la posicion del dedo
-                    disx = Mathf.RoundToInt(end.x - start.x);//se verica las diferencias en las posiciones y cuando se
-                    disy = Mathf.RoundToInt(end.y - start.y);//acerca a uno, es cuando se mueve al siguiente tile
-                    if (disx == 1 || disx == -1)
+                    tr.x = start.x + disx;
+                    gobj.transform.position = tr;
+                    if (Mathf.Abs(ini.x - tr.x) > pasos - Mathf.Abs(ini.y - tr.y))
                     {
-                        tr.x = start.x + disx;
-                        gobj.transform.position = tr;
-                        if (Mathf.Abs(ini.x - tr.x) > pasos - Mathf.Abs(ini.y - tr.y))
-                        {
-                            pasos++;
-                        }
-                        else
-                        {
-                            pasos--;
-                        }
-                        if (pasos > maxPasos)//si se supera el numero de pasos
-                        {
-                            tr.x = start.x;
-                            gobj.transform.position = start;//el fantasma regresa a la posicion anterior
-                            pasos--;
-                        }
+                        pasos++;
                     }
-                    if (disy == 1 || disy == -1)
+                    else
                     {
-                        tr.y = start.y + disy;
-                        gobj.transform.position = tr;
-                        if (Mathf.Abs(ini.y - tr.y) > pasos - Mathf.Abs(ini.x - tr.x))
-                        {
-                            pasos++;
-                        }
-                        else
-                        {
-                            pasos--;
-                        }
-                        if (pasos > maxPasos)
-                        {
-                            tr.y = start.y;
-                            gobj.transform.position = start;
-                            pasos--;
-                        }
+                        pasos--;
                     }
-                    text.text = pasos.ToString();
+                    if (pasos > maxPasos)//si se supera el numero de pasos
+                    {
+                        tr.x = start.x;
+                       gobj.transform.position = start;//el fantasma regresa a la posicion anterior
+                       pasos--;
+                    }
                 }
-
+                if (disy == 1 || disy == -1)
+                {
+                    tr.y = start.y + disy;
+                    gobj.transform.position = tr;
+                    if (Mathf.Abs(ini.y - tr.y) > pasos - Mathf.Abs(ini.x - tr.x))
+                    {
+                        pasos++;
+                    }
+                    else
+                    {
+                        pasos--;
+                    }
+                    if (pasos > maxPasos)
+                    {
+                        tr.y = start.y;
+                        gobj.transform.position = start;
+                        pasos--;
+                    }
+                }
+                text.text = pasos.ToString();
             }
         }
+      /*  if (Input.touchCount > 0 && gobj != null)
+        {
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                tr = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+                tr = new Vector3(Mathf.RoundToInt( tr.x), Mathf.RoundToInt(tr.y), Mathf.RoundToInt(tr.z));
+                tr.x -= .5f;
+                tr.y -= .5f;
+                gobj.transform.position = tr;
+            }
+        }*/
     }
     RaycastHit2D GenerarRay()
     {
