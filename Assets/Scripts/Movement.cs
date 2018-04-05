@@ -8,7 +8,7 @@ public class Movement : MonoBehaviour {
     GameObject gobj;
     Vector2 start, end;
     Vector3 tr,ini,mo;
-    public int pasos=0, maxPasos;
+    int pasos=0, maxPasos=5;
     float disx, disy;
     void Update () {
         Controlar();
@@ -74,17 +74,6 @@ public class Movement : MonoBehaviour {
                 text.text = pasos.ToString();
             }
         }
-      /*  if (Input.touchCount > 0 && gobj != null)
-        {
-            if (Input.GetTouch(0).phase == TouchPhase.Began)
-            {
-                tr = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-                tr = new Vector3(Mathf.RoundToInt( tr.x), Mathf.RoundToInt(tr.y), Mathf.RoundToInt(tr.z));
-                tr.x -= .5f;
-                tr.y -= .5f;
-                gobj.transform.position = tr;
-            }
-        }*/
     }
     RaycastHit2D GenerarRay()
     {
@@ -96,10 +85,12 @@ public class Movement : MonoBehaviour {
     {
         gobj.transform.parent.transform.position = gobj.transform.position;
         gobj.transform.localPosition = new Vector3();
+        pasos = 0;
     }
     public void Cancelar()
     {
         gobj.transform.localPosition = new Vector3();
         gobj = null;
+        pasos = 0;
     }
 }
