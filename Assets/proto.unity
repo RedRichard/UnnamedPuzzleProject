@@ -408,8 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 2135364969}
-  pasos: 0
-  maxPasos: 5
+  maxPasos: 0
 --- !u!1 &1131106369
 GameObject:
   m_ObjectHideFlags: 0
