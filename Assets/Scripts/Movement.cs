@@ -7,15 +7,16 @@ public class Movement : MonoBehaviour {
     public Text text;
     GameObject gobj;
     Vector2 start, end;
-    Vector3 tr,ini,mo;
-    public int pasos=0, maxPasos;
+    Vector3 tr,ini;
+    int pasos = 0;
+    int maxPasos;
     float disx, disy;
     void Update () {
         Controlar();
     }
     void Controlar()
     {
-        if (Input.touchCount > 0 && gobj==null)   //controles touch, no hace nada si no detecta al menos un dedo
+        if (Input.touchCount > 0)   //controles touch, no hace nada si no detecta al menos un dedo
         {
             if (Input.GetTouch(0).phase == TouchPhase.Began) //Cuando detecta el dedo lanza un ray 
             {
@@ -23,6 +24,7 @@ public class Movement : MonoBehaviour {
                 if (hit2D && hit2D.transform.tag=="Player") //Si el objeto es un personaje jugable
                 {
                     gobj = hit2D.transform.gameObject;
+                    maxPasos = ObtenerMaximoPasos(gobj.transform.parent.gameObject);
                     tr = gobj.transform.position;
                     ini = hit2D.transform.parent.transform.position; //Se guarda la posicion original del jugador
                 }
@@ -47,7 +49,7 @@ public class Movement : MonoBehaviour {
                     }
                     if (pasos > maxPasos)//si se supera el numero de pasos
                     {
-                        tr.x = start.x;
+                       tr.x = start.x;
                        gobj.transform.position = start;//el fantasma regresa a la posicion anterior
                        pasos--;
                     }
@@ -94,12 +96,31 @@ public class Movement : MonoBehaviour {
     }
     public void Mover()
     {
-        gobj.transform.parent.transform.position = gobj.transform.position;
-        gobj.transform.localPosition = new Vector3();
+        if (gobj != null)
+        {
+            gobj.transform.parent.transform.position = gobj.transform.position;
+            gobj.transform.localPosition = new Vector3();
+            pasos = 0;
+        }
     }
     public void Cancelar()
     {
-        gobj.transform.localPosition = new Vector3();
-        gobj = null;
+        if (gobj != null)
+        {
+            gobj.transform.localPosition = new Vector3();
+            gobj = null;
+            pasos = 0;
+        }
+    }
+   public int ObtenerMaximoPasos(GameObject personaje)
+    {
+        switch (personaje.name)
+        {
+            case "Mage":
+                return 5;
+            default:
+                return 0;
+
+        }
     }
 }
