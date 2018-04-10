@@ -7,86 +7,73 @@ public class Movement : MonoBehaviour {
     public Text text;
     GameObject gobj;
     Vector2 start, end;
-    Vector3 tr,ini;
     int pasos = 0;
     int maxPasos;
     float disx, disy;
-    void Update () {
+    void FixedUpdate () {
         Controlar();
     }
     void Controlar()
     {
-        if (Input.touchCount > 0)   //controles touch, no hace nada si no detecta al menos un dedo
+        if (Input.touchCount > 0 && gobj==null)   //controles touch, no hace nada si no detecta al menos un dedo
         {
             if (Input.GetTouch(0).phase == TouchPhase.Began) //Cuando detecta el dedo lanza un ray 
             {
                 RaycastHit2D hit2D = GenerarRay();
                 if (hit2D && hit2D.transform.tag=="Player") //Si el objeto es un personaje jugable
                 {
-                    gobj = hit2D.transform.gameObject;
-                    maxPasos = ObtenerMaximoPasos(gobj.transform.parent.gameObject);
-                    tr = gobj.transform.position;
-                    ini = hit2D.transform.parent.transform.position; //Se guarda la posicion original del jugador
+                    gobj = hit2D.transform.gameObject;//se guarda el objeto con el que el ray choco
+                    maxPasos = ObtenerMaximoPasos(gobj.transform.parent.gameObject);//dependiendo del personaje se veran el max de pasos que puede dar
                 }
-            }
-            else if (Input.GetTouch(0).phase == TouchPhase.Moved && gobj)//Cuando el dedo se empieza a mover sobre la pantalla
-            {
-                start = gobj.transform.position;//la posicion del fantasma
-                end = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);//la posicion del dedo
-                disx = Mathf.RoundToInt(end.x - start.x);//se verica las diferencias en las posiciones y cuando se
-                disy = Mathf.RoundToInt(end.y - start.y);//acerca a uno, es cuando se mueve al siguiente tile
-                if (disx == 1 || disx == -1)
-                {
-                    tr.x = start.x + disx;
-                    gobj.transform.position = tr;
-                    if (Mathf.Abs(ini.x - tr.x) > pasos - Mathf.Abs(ini.y - tr.y))
-                    {
-                        pasos++;
-                    }
-                    else
-                    {
-                        pasos--;
-                    }
-                    if (pasos > maxPasos)//si se supera el numero de pasos
-                    {
-                       tr.x = start.x;
-                       gobj.transform.position = start;//el fantasma regresa a la posicion anterior
-                       pasos--;
-                    }
-                }
-                if (disy == 1 || disy == -1)
-                {
-                    tr.y = start.y + disy;
-                    gobj.transform.position = tr;
-                    if (Mathf.Abs(ini.y - tr.y) > pasos - Mathf.Abs(ini.x - tr.x))
-                    {
-                        pasos++;
-                    }
-                    else
-                    {
-                        pasos--;
-                    }
-                    if (pasos > maxPasos)
-                    {
-                        tr.y = start.y;
-                        gobj.transform.position = start;
-                        pasos--;
-                    }
-                }
-                text.text = pasos.ToString();
             }
         }
-      /*  if (Input.touchCount > 0 && gobj != null)
+        if (Input.touchCount > 0 && gobj != null)
         {
             if (Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                tr = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-                tr = new Vector3(Mathf.RoundToInt( tr.x), Mathf.RoundToInt(tr.y), Mathf.RoundToInt(tr.z));
-                tr.x -= .5f;
-                tr.y -= .5f;
-                gobj.transform.position = tr;
+                Mover();
             }
-        }*/
+            else if (Input.GetTouch(0).phase == TouchPhase.Moved && gobj != null)//Cuando el dedo se empieza a mover sobre la pantalla
+            {
+                Mover();
+            }
+        }
+        int dist;
+        while (pasos > maxPasos)
+        {
+            gobj.transform.Translate(Vector3.up);
+            dist = ObtenerPasos(gobj.transform.position);
+            if (dist > pasos)
+            {
+                gobj.transform.Translate(Vector3.down);
+            }
+            gobj.transform.Translate(Vector3.down);
+            dist = ObtenerPasos(gobj.transform.position);
+            if (dist > pasos)
+            {
+                gobj.transform.Translate(Vector3.up);
+            }
+            gobj.transform.Translate(Vector3.left);
+            dist = ObtenerPasos(gobj.transform.position);
+            if (dist > pasos)
+            {
+                gobj.transform.Translate(Vector3.right);
+            }
+            gobj.transform.Translate(Vector3.right);
+            dist = ObtenerPasos(gobj.transform.position);
+            if (dist > pasos)
+            {
+                gobj.transform.Translate(Vector3.left);
+            }
+            pasos = ObtenerPasos(gobj.transform.position);
+        }
+    }
+    void Mover()
+    {
+        end = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);//la posicion del dedo
+        end = new Vector3(Mathf.RoundToInt(end.x), Mathf.RoundToInt(end.y));//se redondea la posicion del dedo, para manejarlo bien con el grid
+        gobj.transform.position = end;//se mueve el fantasma a la posicion del dedo
+        pasos = ObtenerPasos(gobj.transform.position);//se obtienen los pasos que ha dado,
     }
     RaycastHit2D GenerarRay()
     {
@@ -94,8 +81,13 @@ public class Movement : MonoBehaviour {
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         return hit2D;
     }
-    public void Mover()
+    public void MoverButton()
     {
+        /* para evitar error, no se puedde acceder a su funcionalidad no hay un personaje seleccionado
+         * se mueve el padre del fantasma, es decir al personaje bien iluminado a la posicion del fantasma,
+         * y para no mover tambien al fantasma se reinicia su transform, asi estara justo donde este el personaje
+         * y la variable de los pasos se reinicia.
+         */
         if (gobj != null)
         {
             gobj.transform.parent.transform.position = gobj.transform.position;
@@ -103,7 +95,7 @@ public class Movement : MonoBehaviour {
             pasos = 0;
         }
     }
-    public void Cancelar()
+    public void CancelarButton()
     {
         if (gobj != null)
         {
@@ -111,6 +103,13 @@ public class Movement : MonoBehaviour {
             gobj = null;
             pasos = 0;
         }
+    }
+    public int ObtenerPasos(Vector3 pos)
+    {
+        int pasos;
+        pos = new Vector3(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y));
+        pasos = (int)(Mathf.Abs(pos.x) + Mathf.Abs(pos.y));
+        return pasos;
     }
    public int ObtenerMaximoPasos(GameObject personaje)
     {
