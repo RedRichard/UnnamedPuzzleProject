@@ -21,7 +21,7 @@ public class Movement : MonoBehaviour {
             {
                 RaycastHit2D hit2D = GenerarRay();
                 try{
-                    if (hit2D && hit2D.transform.tag=="Player" && gobj==null) //Si el objeto es un personaje jugable
+                    if (hit2D.transform.tag=="Player" && gobj==null) //Si el objeto es un personaje jugable
                     {
                         print("Funciona");
                         gobj = hit2D.transform.gameObject;
@@ -35,18 +35,18 @@ public class Movement : MonoBehaviour {
                         trPos.x -= .5f;
                         trPos.y -= .5f;
                         gobj.transform.position = trPos;
-                        currTouchPos = gobj.transform.position;
-                        
+                        currTouchPos = gobj.transform.position;                        
                     }
                 } catch (System.Exception e){
-                    gobj.transform.position = iniPos;
-                    gobj = null;
-                    Debug.Log(e.ToString());
+                    // gobj.transform.position = iniPos;
+                    // gobj = null;
+                    // gObjMain = null;
+                    // Debug.Log(e.ToString());
                 }
             }
-            if (Input.GetTouch(0).phase == TouchPhase.Moved){
-                currTouchPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-            }
+            // if (Input.GetTouch(0).phase == TouchPhase.Moved){
+            //     currTouchPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+            // }
         }
         // if (gobj)//Cuando el dedo se empieza a mover sobre la pantalla
         // {
@@ -117,5 +117,9 @@ public class Movement : MonoBehaviour {
     {
         gobj.transform.localPosition = new Vector3();
         gobj = null;
+    }
+
+    void OnCollisionEnter2D (Collision2D col){
+        print("Choca");
     }
 }
