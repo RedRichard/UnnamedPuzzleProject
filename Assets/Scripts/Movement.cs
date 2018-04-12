@@ -29,11 +29,13 @@ public class Movement : MonoBehaviour {
         }
         if (Input.touchCount > 0 && gobj != null)
         {
-            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            RaycastHit2D hit = GenerarRay();
+            print(hit.transform.tag);
+            if (Input.GetTouch(0).phase == TouchPhase.Began && hit.transform.tag=="Board")
             {
                 Mover();
             }
-            else if (Input.GetTouch(0).phase == TouchPhase.Moved && gobj != null)//Cuando el dedo se empieza a mover sobre la pantalla
+            else if (Input.GetTouch(0).phase == TouchPhase.Moved && gobj != null && hit.transform.tag=="Board")//Cuando el dedo se empieza a mover sobre la pantalla
             {
                 Mover();
             }
@@ -49,7 +51,7 @@ public class Movement : MonoBehaviour {
             }
             gobj.transform.Translate(Vector3.down);
             dist = ObtenerPasos(gobj.transform.position);
-            if (dist > pasos)
+            if (dist >= pasos)
             {
                 gobj.transform.Translate(Vector3.up);
             }
@@ -61,12 +63,13 @@ public class Movement : MonoBehaviour {
             }
             gobj.transform.Translate(Vector3.right);
             dist = ObtenerPasos(gobj.transform.position);
-            if (dist > pasos)
+            if (dist >= pasos)
             {
                 gobj.transform.Translate(Vector3.left);
             }
             pasos = ObtenerPasos(gobj.transform.position);
         }
+        text.text = pasos.ToString();
     }
     void Mover()
     {
@@ -81,7 +84,7 @@ public class Movement : MonoBehaviour {
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         return hit2D;
     }
-    public void MoverButton()
+    public void MoverBut()
     {
         /* para evitar error, no se puedde acceder a su funcionalidad no hay un personaje seleccionado
          * se mueve el padre del fantasma, es decir al personaje bien iluminado a la posicion del fantasma,
@@ -95,7 +98,7 @@ public class Movement : MonoBehaviour {
             pasos = 0;
         }
     }
-    public void CancelarButton()
+    public void CancelarBut()
     {
         if (gobj != null)
         {
@@ -106,10 +109,10 @@ public class Movement : MonoBehaviour {
     }
     public int ObtenerPasos(Vector3 pos)
     {
-        int pasos;
-        pos = new Vector3(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y));
-        pasos = (int)(Mathf.Abs(pos.x) + Mathf.Abs(pos.y));
-        return pasos;
+        int dist;
+        pos = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y));
+        dist = (int)(Mathf.Abs(pos.x) + Mathf.Abs(pos.y));
+        return dist;
     }
    public int ObtenerMaximoPasos(GameObject personaje)
     {
