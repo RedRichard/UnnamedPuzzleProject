@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Movement : MonoBehaviour {
     public Text text;
-    GameObject gobj;
+    GameObject gObj, gObjParent;
     Vector2 start, end;
     int pasos = 0;
     int maxPasos;
@@ -15,19 +15,20 @@ public class Movement : MonoBehaviour {
     }
     void Controlar()
     {
-        if (Input.touchCount > 0 && gobj==null)   //controles touch, no hace nada si no detecta al menos un dedo
+        if (Input.touchCount > 0 && gObj==null)   //controles touch, no hace nada si no detecta al menos un dedo
         {
             if (Input.GetTouch(0).phase == TouchPhase.Began) //Cuando detecta el dedo lanza un ray 
             {
                 RaycastHit2D hit2D = GenerarRay();
                 if (hit2D && hit2D.transform.tag=="Player") //Si el objeto es un personaje jugable
                 {
-                    gobj = hit2D.transform.gameObject;//se guarda el objeto con el que el ray choco
-                    maxPasos = ObtenerMaximoPasos(gobj.transform.parent.gameObject);//dependiendo del personaje se veran el max de pasos que puede dar
+                    gObj = hit2D.transform.gameObject;//se guarda el objeto con el que el ray choco
+                    gObjParent = hit2D.transform.parent.transform.gameObject; //Guardamos al Jugador
+                    maxPasos = ObtenerMaximoPasos(gObj.transform.parent.gameObject);//dependiendo del personaje se veran el max de pasos que puede dar
                 }
             }
         }
-        if (Input.touchCount > 0 && gobj != null)
+        if (Input.touchCount > 0 && gObj != null)
         {
             RaycastHit2D hit = GenerarRay();
             print(hit.transform.tag);
@@ -35,7 +36,7 @@ public class Movement : MonoBehaviour {
             {
                 Mover();
             }
-            else if (Input.GetTouch(0).phase == TouchPhase.Moved && gobj != null && hit.transform.tag=="Board")//Cuando el dedo se empieza a mover sobre la pantalla
+            else if (Input.GetTouch(0).phase == TouchPhase.Moved && gObj != null && hit.transform.tag=="Board")//Cuando el dedo se empieza a mover sobre la pantalla
             {
                 Mover();
             }
@@ -43,31 +44,31 @@ public class Movement : MonoBehaviour {
         int dist;
         while (pasos > maxPasos)
         {
-            gobj.transform.Translate(Vector3.up);
-            dist = ObtenerPasos(gobj.transform.position);
+            gObj.transform.Translate(Vector3.up);
+            dist = ObtenerPasos(gObj.transform.position);
             if (dist > pasos)
             {
-                gobj.transform.Translate(Vector3.down);
+                gObj.transform.Translate(Vector3.down);
             }
-            gobj.transform.Translate(Vector3.down);
-            dist = ObtenerPasos(gobj.transform.position);
+            gObj.transform.Translate(Vector3.down);
+            dist = ObtenerPasos(gObj.transform.position);
             if (dist >= pasos)
             {
-                gobj.transform.Translate(Vector3.up);
+                gObj.transform.Translate(Vector3.up);
             }
-            gobj.transform.Translate(Vector3.left);
-            dist = ObtenerPasos(gobj.transform.position);
+            gObj.transform.Translate(Vector3.left);
+            dist = ObtenerPasos(gObj.transform.position);
             if (dist > pasos)
             {
-                gobj.transform.Translate(Vector3.right);
+                gObj.transform.Translate(Vector3.right);
             }
-            gobj.transform.Translate(Vector3.right);
-            dist = ObtenerPasos(gobj.transform.position);
+            gObj.transform.Translate(Vector3.right);
+            dist = ObtenerPasos(gObj.transform.position);
             if (dist >= pasos)
             {
-                gobj.transform.Translate(Vector3.left);
+                gObj.transform.Translate(Vector3.left);
             }
-            pasos = ObtenerPasos(gobj.transform.position);
+            pasos = ObtenerPasos(gObj.transform.position);
         }
         text.text = pasos.ToString();
     }
@@ -75,8 +76,8 @@ public class Movement : MonoBehaviour {
     {
         end = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);//la posicion del dedo
         end = new Vector3(Mathf.RoundToInt(end.x), Mathf.RoundToInt(end.y));//se redondea la posicion del dedo, para manejarlo bien con el grid
-        gobj.transform.position = end;//se mueve el fantasma a la posicion del dedo
-        pasos = ObtenerPasos(gobj.transform.position);//se obtienen los pasos que ha dado,
+        gObj.transform.position = end;//se mueve el fantasma a la posicion del dedo
+        pasos = ObtenerPasos(gObj.transform.position);//se obtienen los pasos que ha dado,
     }
     RaycastHit2D GenerarRay()
     {
@@ -91,19 +92,19 @@ public class Movement : MonoBehaviour {
          * y para no mover tambien al fantasma se reinicia su transform, asi estara justo donde este el personaje
          * y la variable de los pasos se reinicia.
          */
-        if (gobj != null)
+        if (gObj != null)
         {
-            gobj.transform.parent.transform.position = gobj.transform.position;
-            gobj.transform.localPosition = new Vector3();
+            gObjParent.transform.position = gObj.transform.position;
+            gObj.transform.localPosition = new Vector3();
             pasos = 0;
         }
     }
     public void CancelarBut()
     {
-        if (gobj != null)
+        if (gObj != null)
         {
-            gobj.transform.localPosition = new Vector3();
-            gobj = null;
+            gObj.transform.localPosition = new Vector3();
+            gObj = null;
             pasos = 0;
         }
     }
