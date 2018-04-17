@@ -6,11 +6,9 @@ using UnityEngine.UI;
 public class Movement : MonoBehaviour {
     public Text text;
     GameObject gObj, gObjParent;
-    Vector2 start, end;
-    int pasos = 0;
+    float pasos;
     int maxPasos;
-    float disx, disy;
-    void FixedUpdate () {
+    void Update () {
         Controlar();
     }
     void Controlar()
@@ -24,60 +22,60 @@ public class Movement : MonoBehaviour {
                 {
                     gObj = hit2D.transform.gameObject;//se guarda el objeto con el que el ray choco
                     gObjParent = hit2D.transform.parent.transform.gameObject; //Guardamos al Jugador
-                    maxPasos = ObtenerMaximoPasos(gObj.transform.parent.gameObject);//dependiendo del personaje se veran el max de pasos que puede dar
+                    maxPasos = ObtenerMaximoPasos(gObjParent);//dependiendo del personaje se veran el max de pasos que puede dar
                 }
             }
         }
         if (Input.touchCount > 0 && gObj != null)
         {
             RaycastHit2D hit = GenerarRay();
-            print(hit.transform.tag);
-            if (Input.GetTouch(0).phase == TouchPhase.Began && hit.transform.tag=="Board")
+            if (Input.GetTouch(0).phase == TouchPhase.Began &&hit.collider!=null && hit.transform.tag=="Board")
             {
                 Mover();
             }
-            else if (Input.GetTouch(0).phase == TouchPhase.Moved && gObj != null && hit.transform.tag=="Board")//Cuando el dedo se empieza a mover sobre la pantalla
+            else if (Input.GetTouch(0).phase == TouchPhase.Moved && hit.collider != null && gObj != null && hit.transform.tag=="Board")//Cuando el dedo se empieza a mover sobre la pantalla
             {
                 Mover();
             }
         }
-        int dist;
+        float dist;
         while (pasos > maxPasos)
         {
             gObj.transform.Translate(Vector3.up);
-            dist = ObtenerPasos(gObj.transform.position);
-            if (dist > pasos)
+            dist = ObtenerPasos(gObj);
+            if (dist >= pasos)
             {
                 gObj.transform.Translate(Vector3.down);
             }
             gObj.transform.Translate(Vector3.down);
-            dist = ObtenerPasos(gObj.transform.position);
+            dist = ObtenerPasos(gObj);
             if (dist >= pasos)
             {
                 gObj.transform.Translate(Vector3.up);
             }
             gObj.transform.Translate(Vector3.left);
-            dist = ObtenerPasos(gObj.transform.position);
-            if (dist > pasos)
+            dist = ObtenerPasos(gObj);
+            if (dist >= pasos)
             {
                 gObj.transform.Translate(Vector3.right);
             }
             gObj.transform.Translate(Vector3.right);
-            dist = ObtenerPasos(gObj.transform.position);
+            dist = ObtenerPasos(gObj);
             if (dist >= pasos)
             {
                 gObj.transform.Translate(Vector3.left);
             }
-            pasos = ObtenerPasos(gObj.transform.position);
+            pasos = ObtenerPasos(gObj);
         }
         text.text = pasos.ToString();
     }
     void Mover()
     {
+        Vector3 end;
         end = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);//la posicion del dedo
         end = new Vector3(Mathf.RoundToInt(end.x), Mathf.RoundToInt(end.y));//se redondea la posicion del dedo, para manejarlo bien con el grid
         gObj.transform.position = end;//se mueve el fantasma a la posicion del dedo
-        pasos = ObtenerPasos(gObj.transform.position);//se obtienen los pasos que ha dado,
+        pasos = ObtenerPasos(gObj);//se obtienen los pasos que ha dado,
     }
     RaycastHit2D GenerarRay()
     {
@@ -97,6 +95,7 @@ public class Movement : MonoBehaviour {
             gObjParent.transform.position = gObj.transform.position;
             gObj.transform.localPosition = new Vector3();
             pasos = 0;
+            gObj = null;
         }
     }
     public void CancelarBut()
@@ -108,12 +107,13 @@ public class Movement : MonoBehaviour {
             pasos = 0;
         }
     }
-    public int ObtenerPasos(Vector3 pos)
+    public float ObtenerPasos(GameObject fantasma)
     {
-        int dist;
-        pos = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y));
-        dist = (int)(Mathf.Abs(pos.x) + Mathf.Abs(pos.y));
-        return dist;
+        float distancia;
+        Vector2 posInicio = fantasma.transform.parent.transform.position;
+        Vector2 posFinal = fantasma.transform.position;
+        distancia = Mathf.Abs(posFinal.x - posInicio.x) + Mathf.Abs(posFinal.y - posInicio.y);
+        return distancia;
     }
    public int ObtenerMaximoPasos(GameObject personaje)
     {
