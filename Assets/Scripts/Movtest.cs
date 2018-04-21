@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Movement : MonoBehaviour {
+public class Movtest : MonoBehaviour {
     public Text text;
     GameObject gObj, gObjParent;
     float pasos;
@@ -55,34 +55,43 @@ public class Movement : MonoBehaviour {
         float dist;
         while (pasos > maxPasos)
         {
-
+            VerEspacios();
+            if (arriba)
+            {
                 gObj.transform.Translate(Vector3.up);
                 dist = ObtenerPasos(gObj);
                 if (dist >= pasos)
                 {
                     gObj.transform.Translate(Vector3.down);
                 }
-     
+            }
+            if (abajo)
+            {
                 gObj.transform.Translate(Vector3.down);
                 dist = ObtenerPasos(gObj);
                 if (dist >= pasos)
                 {
                     gObj.transform.Translate(Vector3.up);
                 }
+            }
+            if (izquierda)
+            {
                 gObj.transform.Translate(Vector3.left);
                 dist = ObtenerPasos(gObj);
                 if (dist >= pasos)
                 {
                     gObj.transform.Translate(Vector3.right);
                 }
-         
+            }
+            if (derecha)
+            {
                 gObj.transform.Translate(Vector3.right);
                 dist = ObtenerPasos(gObj);
                 if (dist >= pasos)
                 {
                     gObj.transform.Translate(Vector3.left);
                 }
-            
+            }
             
             pasos = ObtenerPasos(gObj);
         }
