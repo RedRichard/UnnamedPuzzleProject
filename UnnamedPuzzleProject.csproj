@@ -287,7 +287,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Movement.cs" />
     <Compile Include="Assets\Scripts\Movement2.cs" />
-    <Compile Include="Assets\Scripts\Movtest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
