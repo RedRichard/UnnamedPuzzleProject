@@ -26,7 +26,7 @@ public class Movement : MonoBehaviour {
                     gObjParent = hit2D.transform.parent.transform.gameObject; //Guardamos al Jugador
                     maxPasos = ObtenerMaximoPasos(gObjParent);//dependiendo del personaje se veran el max de pasos que puede dar
                     int contador = 0;
-                    MostrarPosiblesPasos(gObj.transform.position+ new Vector3(0,0,-1),Lista,contador);
+                    MostrarPosiblesPasos(gObj.transform.position,Lista,contador);
                 }
             }
         }
@@ -43,7 +43,6 @@ public class Movement : MonoBehaviour {
                 Mover();
             }
         }
-        Excedespasos();
     }
     void Mover()
     {
@@ -53,19 +52,10 @@ public class Movement : MonoBehaviour {
         gObj.transform.position = end;//se mueve el fantasma a la posicion del dedo
         pasos = ObtenerPasos(gObj);//se obtienen los pasos que ha dado,
     }
-    void Excedespasos()
-    {
-        if (pasos > maxPasos)
-        {
-            gObj.transform.position = posInicial;
-            pasos = ObtenerPasos(gObj);
-        }
-        
-        text.text = pasos.ToString();
-    }
+
     RaycastHit2D GenerarRay()
     {
-        Ray2D ray = new Ray2D(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position),-Camera.main.gameObject.transform.position);
+        Ray2D ray = new Ray2D(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Camera.main.transform.forward);
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         return hit2D;
     }
@@ -84,6 +74,12 @@ public class Movement : MonoBehaviour {
             gObj.transform.localPosition = new Vector3();
             pasos = 0;
             gObj = null;
+            GameObject posibles = GameObject.Find("Posibles");
+            for(int i = 0; i < posibles.transform.childCount; i++)
+            {
+                Destroy(posibles.transform.GetChild(i).gameObject);
+            }
+            Lista.Clear();
         }
     }
     public void CancelarBut()
@@ -93,6 +89,12 @@ public class Movement : MonoBehaviour {
             gObj.transform.localPosition = new Vector3();
             gObj = null;
             pasos = 0;
+            GameObject posibles = GameObject.Find("Posibles");
+            for (int i = 0; i < posibles.transform.childCount; i++)
+            {
+                Destroy(posibles.transform.GetChild(i).gameObject);
+            }
+            Lista.Clear();
         }
     }
     public float ObtenerPasos(GameObject fantasma)
@@ -106,7 +108,7 @@ public class Movement : MonoBehaviour {
     public void MostrarPosiblesPasos(Vector3 inicio,Queue<Vector3> Casillas, int contador)
     {
         inicio += new Vector3(0,1);
-        Ray2D ray = new Ray2D(inicio, -Camera.main.gameObject.transform.position);
+        Ray2D ray = new Ray2D(inicio, Camera.main.transform.forward);
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if(hit2D.collider != null && hit2D.transform.tag == "Board")
         {
@@ -115,7 +117,7 @@ public class Movement : MonoBehaviour {
             
         }
         inicio += new Vector3(0, -2);
-        ray=new Ray2D(inicio, -Camera.main.gameObject.transform.position);
+        ray=new Ray2D(inicio, Camera.main.transform.forward);
         hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null && hit2D.transform.tag == "Board")
         {
@@ -123,7 +125,7 @@ public class Movement : MonoBehaviour {
             var paso = Instantiate(Resources.Load("posibles"), inicio, Quaternion.identity, GameObject.Find("Posibles").transform);
         }
         inicio += new Vector3(1, 1);
-        ray = new Ray2D(inicio, -Camera.main.gameObject.transform.position);
+        ray = new Ray2D(inicio, Camera.main.transform.forward);
         hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null && hit2D.transform.tag == "Board")
         {
@@ -131,7 +133,7 @@ public class Movement : MonoBehaviour {
             var paso = Instantiate(Resources.Load("posibles"), inicio, Quaternion.identity, GameObject.Find("Posibles").transform);
         }
         inicio += new Vector3(-2,0);
-        ray = new Ray2D(inicio, -Camera.main.gameObject.transform.position);
+        ray = new Ray2D(inicio, Camera.main.transform.forward);
         hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null && hit2D.transform.tag == "Board")
         {
@@ -149,6 +151,9 @@ public class Movement : MonoBehaviour {
             quitados++;
             MostrarPosiblesPasos(Casillas.Dequeue(), Casillas, contador);
         }
+        contador = 0;
+        quitados = 0;
+        puestos = 0;
     }
     public int ObtenerMaximoPasos(GameObject personaje)
     {
