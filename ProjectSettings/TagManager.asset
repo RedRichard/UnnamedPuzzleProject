@@ -8,6 +8,8 @@ TagManager:
   - Obstacle
   - Button
   - Posibles
+  - Enemigo
+  - Ataque
   layers:
   - Default
   - TransparentFX
