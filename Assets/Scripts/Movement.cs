@@ -98,4 +98,72 @@ public class Movement : MonoBehaviour {
             }
         }
     }
+    public bool ChecarRadio(Vector3 inicio, int ataque, Queue<Vector3> Casillas, int contador,Queue<Vector3> Enemigos)
+    {
+        bool prueba = false;
+        inicio += new Vector3(0, 1);
+        Ray2D ray = new Ray2D(inicio, Camera.main.transform.forward);
+        RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
+        if (hit2D.collider != null)
+        {
+            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Enemigo")
+            {
+                Enemigos.Enqueue(inicio);
+            }
+        }
+        inicio += new Vector3(0, -2);
+        ray = new Ray2D(inicio, Camera.main.transform.forward);
+        hit2D = Physics2D.Raycast(ray.origin, ray.direction);
+        if (hit2D.collider != null)
+        {
+            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Enemigo")
+            {
+                Enemigos.Enqueue(inicio);
+            }
+        }
+        inicio += new Vector3(1, 1);
+        ray = new Ray2D(inicio, Camera.main.transform.forward);
+        hit2D = Physics2D.Raycast(ray.origin, ray.direction);
+        if (hit2D.collider != null)
+        {
+            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Enemigo")
+            {
+                Enemigos.Enqueue(inicio);
+            }
+        }
+        inicio += new Vector3(-2, 0);
+        ray = new Ray2D(inicio, Camera.main.transform.forward);
+        hit2D = Physics2D.Raycast(ray.origin, ray.direction);
+        if (hit2D.collider != null)
+        {
+            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Enemigo")
+            {
+                Enemigos.Enqueue(inicio);
+            }
+        }
+        if (quitados == puestos)
+        {
+            quitados = 0;
+            puestos = Casillas.Count;
+            contador++;
+        }
+        if (contador < ataque)
+        {
+            quitados++;
+           prueba = ChecarRadio(Casillas.Dequeue(), ataque, Casillas, contador,Enemigos);
+        }
+        contador = 0;
+        quitados = 0;
+        puestos = 0;
+        if (Enemigos.Count > 0)
+        {
+            prueba = true;
+        }
+        return prueba;
+    }
+
 }

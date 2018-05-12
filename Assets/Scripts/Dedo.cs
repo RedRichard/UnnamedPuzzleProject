@@ -71,6 +71,10 @@ public class Dedo : MonoBehaviour {
             }
             var script= gObj.GetComponent<Personajes>();
             script.Lista.Clear();
+            bool probar=script.ChecarR();
+            print(probar);
+            script.Enemigos.Clear();
+            script.Lista.Clear();
             gObj = null;
         }
     }
