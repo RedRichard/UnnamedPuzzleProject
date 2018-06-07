@@ -7,14 +7,15 @@ public class Movement : MonoBehaviour {
     {
         public Vector3 posicion;
         public int maxPasos, rangoAtaque;
-        public bool turno,seleccionado;
-        public Personaje(Vector3 pos,int MaxPasos, int RangoAtaque, bool Turno,bool Seleccionado)
+        public bool turno;
+        public string enemy;
+        public Personaje(Vector3 pos, int MaxPasos, int RangoAtaque, bool Turno, string Enemigo)
         {
             posicion = pos;
             maxPasos = MaxPasos;
             rangoAtaque = RangoAtaque;
             turno = Turno;
-            seleccionado = Seleccionado;
+            enemy = Enemigo;
         }
     }
     public void MostrarPosiblesPasos(Vector3 inicio, Queue<Vector3> Casillas, int contador,int maxPasos)
@@ -165,5 +166,4 @@ public class Movement : MonoBehaviour {
         }
         return prueba;
     }
-
 }

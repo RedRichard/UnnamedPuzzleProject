@@ -285,8 +285,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ControladorTurno.cs" />
     <Compile Include="Assets\Scripts\Dedo.cs" />
+    <Compile Include="Assets\Scripts\Enemigo.cs" />
     <Compile Include="Assets\Scripts\Movement.cs" />
+    <Compile Include="Assets\Scripts\PadreEneigo.cs" />
     <Compile Include="Assets\Scripts\Personajes.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

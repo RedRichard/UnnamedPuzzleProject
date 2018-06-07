@@ -4,9 +4,26 @@ using UnityEngine;
 
 public class Dedo : MonoBehaviour {
     GameObject gObj, gObjParent;
+    float camaraHeight;
+    Vector3 camPos;
+    public GameObject Controlador;
     // Update is called once per frame
-    void Update () {
-        Controlar();
+    public GameObject MoverButt, CancelarButt, AtaqueBut, NoataqueBut,MostarAEbut;
+    void FixedUpdate () {
+        Controlador.GetComponent<ControladorTurno>().ChecarTurno();
+        if (Controlador.GetComponent<ControladorTurno>().turnoJugadores)
+        {
+            Controlar();
+        }
+        else
+        {
+            var enemigos = FindObjectsOfType<Enemigo>();
+            foreach(Enemigo enemigo in enemigos)
+            {
+                enemigo.Atacar();
+            }
+            Controlador.GetComponent<ControladorTurno>().RegresarJugadores();
+        }
 	}
     void Controlar()
     {
@@ -15,12 +32,14 @@ public class Dedo : MonoBehaviour {
             if (Input.GetTouch(0).phase == TouchPhase.Began) //Cuando detecta el dedo lanza un ray 
             {
                 RaycastHit2D hit2D = GenerarRay();
-                if (hit2D && hit2D.transform.tag == "Player") //Si el objeto es un personaje jugable
+                if (hit2D && hit2D.transform.tag == "Player" && hit2D.transform.gameObject.GetComponent<Personajes>().mago.turno) //Si el objeto es un personaje jugable
                 {
                     gObj = hit2D.transform.gameObject;//se guarda el objeto con el que el ray choco
                     gObjParent = hit2D.transform.parent.transform.gameObject; //Guardamos al Jugador
-                    gObj.GetComponent<Personajes>().Mago();
                     gObj.GetComponent<Personajes>().Tocado();
+                    MoverButt.SetActive(true);
+                    CancelarButt.SetActive(true);
+                    MostarAEbut.SetActive(false);
                 }
             }
         }
@@ -72,11 +91,27 @@ public class Dedo : MonoBehaviour {
             var script= gObj.GetComponent<Personajes>();
             script.Lista.Clear();
             bool probar=script.ChecarR();
-            print(probar);
-            script.Enemigos.Clear();
-            script.Lista.Clear();
-            gObj = null;
+            if (probar)
+            {
+                camaraHeight = Camera.main.orthographicSize;
+                camPos = Camera.main.transform.position;
+                Camera.main.orthographicSize = 3;
+                Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
+                AtaqueBut.SetActive(true);
+                NoataqueBut.SetActive(true);
+            }
+            else
+            {
+                script.Enemigos.Clear();
+                script.Lista.Clear();
+                script.mago.turno = false;
+                gObj = null;
+                MostarAEbut.SetActive(true);
+
+            }
         }
+        CancelarButt.SetActive(false);
+        MoverButt.SetActive(false);
     }
     public void CancelarBut()
     {
@@ -92,6 +127,62 @@ public class Dedo : MonoBehaviour {
                 Destroy(posibles.transform.GetChild(i).gameObject);
             }
 
+        }
+        MostarAEbut.SetActive(true);
+        MoverButt.SetActive(false);
+        CancelarButt.SetActive(false);
+
+    }
+    public void NoAtacar()
+    {
+        NoataqueBut.SetActive(false);
+        AtaqueBut.SetActive(false);
+        Camera.main.orthographicSize = camaraHeight;
+        Camera.main.transform.position = camPos;
+        var script = gObj.GetComponent<Personajes>();
+        script.Enemigos.Clear();
+        script.Lista.Clear();
+        script.mago.turno = false;
+        gObj = null;
+        MostarAEbut.SetActive(true);
+
+    }
+    public void Atacar()
+    {
+        var script = gObj.GetComponent<Personajes>();
+        bool probar = script.ChecarR();
+        bool atacando = true;
+        while (atacando)
+        {
+            foreach (Vector3 inicio in script.Enemigos)
+            {
+                Ray2D ray = new Ray2D(inicio, Camera.main.transform.forward);
+                RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
+                if (atacando && hit2D.collider.gameObject.name == script.mago.enemy)
+                {
+                    Destroy(hit2D.collider.gameObject.transform.parent.gameObject);
+                    atacando = false;
+                }
+            }
+            atacando = false;
+        }
+        atacando = false;
+        AtaqueBut.SetActive(false);
+        NoataqueBut.SetActive(false);
+        Camera.main.orthographicSize = camaraHeight;
+        Camera.main.transform.position = camPos;
+        script.Enemigos.Clear();
+        script.Lista.Clear();
+        script.mago.turno = false;
+        gObj = null;
+        MostarAEbut.SetActive(true);
+    }
+    public void MostrarAe()
+    {
+        var Enemigos = FindObjectsOfType<Enemigo>();
+        foreach(Enemigo enemigo in Enemigos)
+        {
+            enemigo.MostrarR();
         }
     }
 }
