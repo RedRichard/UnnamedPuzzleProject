@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PadreEneigo : MonoBehaviour {
+public class PadreEnemigo : MonoBehaviour {
     public int quitados, puestos;
     public struct Enemigos
     {

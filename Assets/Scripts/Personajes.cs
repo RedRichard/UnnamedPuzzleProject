@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Personajes : Movement {
+public class Personajes : PersonajeJugable {
     public Personaje mago;
     public Queue<Vector3> Lista = new Queue<Vector3>(),Enemigos=new Queue<Vector3>();
     public int Pasos, Ataque;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dedo : MonoBehaviour {
+public class Touch : MonoBehaviour {
     GameObject gObj, gObjParent;
     float camaraHeight;
     Vector3 camPos;

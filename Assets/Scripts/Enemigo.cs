@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemigo : PadreEneigo {
+public class Enemigo : PadreEnemigo {
     public Enemigos enemigo;
     public Queue<Vector3> ataquezona = new Queue<Vector3>(),jugadores=new Queue<Vector3>();
     public int Ataque;

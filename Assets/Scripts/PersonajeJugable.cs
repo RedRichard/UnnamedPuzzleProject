@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement : MonoBehaviour {
+public class PersonajeJugable : MonoBehaviour {
     public int quitados, puestos;
     public struct Personaje
     {

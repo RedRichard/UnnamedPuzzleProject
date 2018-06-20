@@ -51,8 +51,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Movement.cs" />
-     <Compile Include="Assets\Scripts\Movement2.cs" />
+     <Compile Include="Assets\Scripts\ControladorTurno.cs" />
+     <Compile Include="Assets\Scripts\Enemigo.cs" />
+     <Compile Include="Assets\Scripts\PadreEnemigo.cs" />
+     <Compile Include="Assets\Scripts\PersonajeJugable.cs" />
+     <Compile Include="Assets\Scripts\Personajes.cs" />
+     <Compile Include="Assets\Scripts\Touch.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
