@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Personajes : PersonajeJugable {
     public Personaje mago;
-    public Queue<Vector3> Lista = new Queue<Vector3>(),Enemigos=new Queue<Vector3>();
+    public Queue<Vector3> Lista = new Queue<Vector3>();
+    public List<GameObject> enemigos = new List<GameObject>();
     public int Pasos, Ataque;
     public string enemigo;
     public void Awake () {
@@ -15,7 +16,14 @@ public class Personajes : PersonajeJugable {
             int contador = 0;
             MostrarPosiblesPasos(mago.posicion, Lista, contador,mago.maxPasos);
             quitados++;
-            MostrarAtaque(Lista.Dequeue(),mago.rangoAtaque,Lista,contador);
+            if (Lista.Count > 0)
+            {
+                MostrarAtaque(Lista.Dequeue(), mago.rangoAtaque, Lista, contador);
+            }
+            else
+            {
+                MostrarAtaque(mago.posicion, mago.rangoAtaque, Lista, contador);
+            }
         }
     }
     public bool ChecarR()
@@ -23,7 +31,7 @@ public class Personajes : PersonajeJugable {
         bool checar;
         mago.posicion = transform.position;
         int contador = 0;
-        checar = ChecarRadio(mago.posicion,mago.rangoAtaque,Lista,contador,Enemigos);
+        checar = ChecarRadio(mago.posicion,mago.rangoAtaque,Lista,contador,enemigos);
         return checar;
     }
 }

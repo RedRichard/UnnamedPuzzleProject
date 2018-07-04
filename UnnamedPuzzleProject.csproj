@@ -288,6 +288,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\ControladorTurno.cs" />
     <Compile Include="Assets\Scripts\Enemigo.cs" />
+    <Compile Include="Assets\Scripts\HabilidadEmpujar.cs" />
     <Compile Include="Assets\Scripts\PadreEnemigo.cs" />
     <Compile Include="Assets\Scripts\PersonajeJugable.cs" />
     <Compile Include="Assets\Scripts\Personajes.cs" />

@@ -23,10 +23,7 @@ public class Enemigo : PadreEnemigo {
     public void Atacar()
     {
         enemigo.activo = true;
-        for(int cont = 0; cont < transform.childCount; cont++)
-        {
-           Destroy(transform.GetChild(cont).gameObject);
-        }
+        QuitarAtacZone();
         if (ChecarR()&& enemigo.activo)
         {
             bool atacando = true;
@@ -51,5 +48,12 @@ public class Enemigo : PadreEnemigo {
         int contador = 0;
         checar = ChecarRadio(enemigo.posicion, enemigo.rangoAtaque, ataquezona, contador, jugadores);
         return checar;
+    }
+    public void QuitarAtacZone()
+    {
+        for (int cont = 0; cont < transform.childCount; cont++)
+        {
+            Destroy(transform.GetChild(cont).gameObject);
+        }
     }
 }

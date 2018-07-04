@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Touch : MonoBehaviour {
-    GameObject gObj, gObjParent;
+    GameObject gObj, gObjParent,enemigoSelected;
     float camaraHeight;
     Vector3 camPos;
     public GameObject Controlador;
+    bool atacando=false;
     // Update is called once per frame
     public GameObject MoverButt, CancelarButt, AtaqueBut, NoataqueBut,MostarAEbut;
     void FixedUpdate () {
@@ -24,7 +25,12 @@ public class Touch : MonoBehaviour {
             }
             Controlador.GetComponent<ControladorTurno>().RegresarJugadores();
         }
-	}
+        if (atacando)
+        {
+            Atacar();
+        }
+
+    }
     void Controlar()
     {
         if (Input.touchCount > 0 && gObj == null)   //controles touch, no hace nada si no detecta al menos un dedo
@@ -90,28 +96,31 @@ public class Touch : MonoBehaviour {
             }
             var script= gObj.GetComponent<Personajes>();
             script.Lista.Clear();
-            bool probar=script.ChecarR();
-            if (probar)
+            atacando=script.ChecarR();
+            if (atacando)
             {
                 camaraHeight = Camera.main.orthographicSize;
                 camPos = Camera.main.transform.position;
                 Camera.main.orthographicSize = 3;
                 Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
-                AtaqueBut.SetActive(true);
                 NoataqueBut.SetActive(true);
             }
             else
             {
-                script.Enemigos.Clear();
+                script.enemigos.Clear();
                 script.Lista.Clear();
                 script.mago.turno = false;
                 gObj = null;
                 MostarAEbut.SetActive(true);
-
             }
         }
         CancelarButt.SetActive(false);
         MoverButt.SetActive(false);
+        var enemigos = FindObjectsOfType<Enemigo>();
+        foreach (Enemigo enemigo in enemigos)
+        {
+            enemigo.QuitarAtacZone();
+        }
     }
     public void CancelarBut()
     {
@@ -140,42 +149,35 @@ public class Touch : MonoBehaviour {
         Camera.main.orthographicSize = camaraHeight;
         Camera.main.transform.position = camPos;
         var script = gObj.GetComponent<Personajes>();
-        script.Enemigos.Clear();
+        script.enemigos.Clear();
         script.Lista.Clear();
         script.mago.turno = false;
         gObj = null;
         MostarAEbut.SetActive(true);
+        atacando = false;
 
     }
     public void Atacar()
     {
         var script = gObj.GetComponent<Personajes>();
-        bool probar = script.ChecarR();
-        bool atacando = true;
-        while (atacando)
+        print(script.enemigos.Count);
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-            foreach (Vector3 inicio in script.Enemigos)
+            RaycastHit2D hit2D = GenerarRay();
+            if (script.enemigos.Contains(hit2D.collider.gameObject))
             {
-                Ray2D ray = new Ray2D(inicio, Camera.main.transform.forward);
-                RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
-                if (atacando && hit2D.collider.gameObject.name == script.mago.enemy)
-                {
-                    Destroy(hit2D.collider.gameObject.transform.parent.gameObject);
-                    atacando = false;
-                }
+                Destroy(hit2D.collider.gameObject.transform.parent.gameObject);
+                atacando = false;
+                NoataqueBut.SetActive(false);
+                Camera.main.orthographicSize = camaraHeight;
+                Camera.main.transform.position = camPos;
+                script.enemigos.Clear();
+                script.Lista.Clear();
+                script.mago.turno = false;
+                gObj = null;
+                MostarAEbut.SetActive(true);
             }
-            atacando = false;
         }
-        atacando = false;
-        AtaqueBut.SetActive(false);
-        NoataqueBut.SetActive(false);
-        Camera.main.orthographicSize = camaraHeight;
-        Camera.main.transform.position = camPos;
-        script.Enemigos.Clear();
-        script.Lista.Clear();
-        script.mago.turno = false;
-        gObj = null;
-        MostarAEbut.SetActive(true);
     }
     public void MostrarAe()
     {

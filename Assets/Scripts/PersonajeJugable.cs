@@ -38,7 +38,7 @@ public class PersonajeJugable : MonoBehaviour {
             puestos = Casillas.Count;
             contador++;
         }
-        if (contador < maxPasos)
+        if (contador < maxPasos && Casillas.Count>0)
         {
             quitados++;
             MostrarPosiblesPasos(Casillas.Dequeue(), Casillas, contador,maxPasos);
@@ -61,7 +61,7 @@ public class PersonajeJugable : MonoBehaviour {
             puestos = Casillas.Count;
             contador++;
         }
-        if (contador < ataque)
+        if (contador < ataque && Casillas.Count>0)
         {
             quitados++;
             MostrarAtaque(Casillas.Dequeue(), ataque, Casillas, contador);
@@ -97,9 +97,13 @@ public class PersonajeJugable : MonoBehaviour {
                 Instantiate(Resources.Load("Ataque"), inicio, Quaternion.identity, GameObject.Find("Posibles").transform);
 
             }
+            if (hit2D.transform.tag == "Player")
+            {
+                Casillas.Enqueue(inicio);
+            }
         }
     }
-    public bool ChecarRadio(Vector3 inicio, int ataque, Queue<Vector3> Casillas, int contador,Queue<Vector3> Enemigos)
+    public bool ChecarRadio(Vector3 inicio, int ataque, Queue<Vector3> Casillas, int contador,List<GameObject> Enemigos)
     {
         bool prueba = false;
         inicio += new Vector3(0, 1);
@@ -110,7 +114,10 @@ public class PersonajeJugable : MonoBehaviour {
             Casillas.Enqueue(inicio);
             if (hit2D.collider.tag == "Enemigo")
             {
-                Enemigos.Enqueue(inicio);
+                if (!Enemigos.Contains(hit2D.collider.gameObject))
+                {
+                    Enemigos.Add(hit2D.collider.gameObject);
+                }
             }
         }
         inicio += new Vector3(0, -2);
@@ -121,7 +128,10 @@ public class PersonajeJugable : MonoBehaviour {
             Casillas.Enqueue(inicio);
             if (hit2D.collider.tag == "Enemigo")
             {
-                Enemigos.Enqueue(inicio);
+                if (!Enemigos.Contains(hit2D.collider.gameObject))
+                {
+                    Enemigos.Add(hit2D.collider.gameObject);
+                }
             }
         }
         inicio += new Vector3(1, 1);
@@ -132,7 +142,10 @@ public class PersonajeJugable : MonoBehaviour {
             Casillas.Enqueue(inicio);
             if (hit2D.collider.tag == "Enemigo")
             {
-                Enemigos.Enqueue(inicio);
+                if (!Enemigos.Contains(hit2D.collider.gameObject))
+                {
+                    Enemigos.Add(hit2D.collider.gameObject);
+                }
             }
         }
         inicio += new Vector3(-2, 0);
@@ -143,7 +156,10 @@ public class PersonajeJugable : MonoBehaviour {
             Casillas.Enqueue(inicio);
             if (hit2D.collider.tag == "Enemigo")
             {
-                Enemigos.Enqueue(inicio);
+                if (!Enemigos.Contains(hit2D.collider.gameObject))
+                {
+                    Enemigos.Add(hit2D.collider.gameObject);
+                }
             }
         }
         if (quitados == puestos)
@@ -152,7 +168,7 @@ public class PersonajeJugable : MonoBehaviour {
             puestos = Casillas.Count;
             contador++;
         }
-        if (contador < ataque)
+        if (contador < ataque && Casillas.Count>0)
         {
             quitados++;
            prueba = ChecarRadio(Casillas.Dequeue(), ataque, Casillas, contador,Enemigos);
