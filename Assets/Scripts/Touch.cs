@@ -1,15 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Touch : MonoBehaviour {
     GameObject gObj, gObjParent,enemigoSelected;
     float camaraHeight;
     Vector3 camPos;
     public GameObject Controlador;
-    bool atacando=false;
-    // Update is called once per frame
-    public GameObject MoverButt, CancelarButt, AtaqueBut, NoataqueBut,MostarAEbut;
+    bool atacando=false,radio=false;
+    public GameObject MoverButt, CancelarButt, HabilidadBut, NoataqueBut,MostarAEbut,NadaButt;
+    private void Awake()
+    {
+        camaraHeight = Camera.main.orthographicSize;
+        camPos = Camera.main.transform.position;
+    }
     void FixedUpdate () {
         Controlador.GetComponent<ControladorTurno>().ChecarTurno();
         if (Controlador.GetComponent<ControladorTurno>().turnoJugadores)
@@ -29,7 +31,10 @@ public class Touch : MonoBehaviour {
         {
             Atacar();
         }
-
+        if (radio)
+        {
+            UsarHabilidad();
+        }
     }
     void Controlar()
     {
@@ -99,20 +104,31 @@ public class Touch : MonoBehaviour {
             atacando=script.ChecarR();
             if (atacando)
             {
-                camaraHeight = Camera.main.orthographicSize;
-                camPos = Camera.main.transform.position;
                 Camera.main.orthographicSize = 3;
                 Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
                 NoataqueBut.SetActive(true);
             }
-            else
+            var habilidad = gObj.GetComponent<Habilidad>();
+            radio = habilidad.ChecarRadio();
+            if (radio)
             {
-                script.enemigos.Clear();
-                script.Lista.Clear();
+                Camera.main.orthographicSize = 3;
+                Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
+                HabilidadBut.SetActive(true);
+            }
+            if(atacando && radio)
+            {
+                HabilidadBut.SetActive(false);
+                NoataqueBut.SetActive(false);
+                NadaButt.SetActive(true);
+            }
+            if(!atacando && !radio)
+            {
                 script.mago.turno = false;
                 gObj = null;
                 MostarAEbut.SetActive(true);
             }
+            
         }
         CancelarButt.SetActive(false);
         MoverButt.SetActive(false);
@@ -145,37 +161,47 @@ public class Touch : MonoBehaviour {
     public void NoAtacar()
     {
         NoataqueBut.SetActive(false);
-        AtaqueBut.SetActive(false);
+        HabilidadBut.SetActive(false);
         Camera.main.orthographicSize = camaraHeight;
         Camera.main.transform.position = camPos;
         var script = gObj.GetComponent<Personajes>();
         script.enemigos.Clear();
         script.Lista.Clear();
+        var habilidad = gObj.GetComponent<Habilidad>();
+        habilidad.personajes.Clear();
+        habilidad.casillas.Clear();
+        radio = false;
         script.mago.turno = false;
         gObj = null;
         MostarAEbut.SetActive(true);
         atacando = false;
+        HabilidadBut.SetActive(false);
 
     }
-    public void Atacar()
+    void Atacar()
     {
         var script = gObj.GetComponent<Personajes>();
-        print(script.enemigos.Count);
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             RaycastHit2D hit2D = GenerarRay();
-            if (script.enemigos.Contains(hit2D.collider.gameObject))
+            if (hit2D && script.enemigos.Contains(hit2D.collider.gameObject))
             {
                 Destroy(hit2D.collider.gameObject.transform.parent.gameObject);
                 atacando = false;
+                radio = false;
                 NoataqueBut.SetActive(false);
                 Camera.main.orthographicSize = camaraHeight;
                 Camera.main.transform.position = camPos;
                 script.enemigos.Clear();
                 script.Lista.Clear();
+                var habilidad = gObj.GetComponent<Habilidad>();
+                habilidad.personajes.Clear();
+                habilidad.casillas.Clear();
                 script.mago.turno = false;
                 gObj = null;
                 MostarAEbut.SetActive(true);
+                HabilidadBut.SetActive(false);
+                NadaButt.SetActive(false);
             }
         }
     }
@@ -186,5 +212,63 @@ public class Touch : MonoBehaviour {
         {
             enemigo.MostrarR();
         }
+    }
+    void UsarHabilidad()
+    {
+        var habilidad = gObj.GetComponent<Habilidad>();
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            RaycastHit2D hit2D = GenerarRay();
+            if (hit2D && habilidad.personajes.Contains(hit2D.collider.gameObject))
+            {
+                habilidad.RealizarHabilidad(hit2D.collider.gameObject);
+                atacando = false;
+                radio = false;
+                NoataqueBut.SetActive(false);
+                HabilidadBut.SetActive(false);
+                NadaButt.SetActive(false);
+                MostarAEbut.SetActive(true);
+                habilidad.personajes.Clear();
+                habilidad.casillas.Clear();
+                var script = gObj.GetComponent<Personajes>();
+                script.enemigos.Clear();
+                script.Lista.Clear();
+                script.mago.turno = false;
+                gObj = null;
+                Camera.main.orthographicSize = camaraHeight;
+                Camera.main.transform.position = camPos;
+            }
+        }
+    }
+    public void Nada()
+    {
+        Camera.main.orthographicSize = camaraHeight;
+        Camera.main.transform.position = camPos;
+        var script = gObj.GetComponent<Personajes>();
+        script.enemigos.Clear();
+        script.Lista.Clear();
+        var habilidad = gObj.GetComponent<Habilidad>();
+        habilidad.personajes.Clear();
+        habilidad.casillas.Clear();
+        radio = false;
+        script.mago.turno = false;
+        gObj = null;
+        MostarAEbut.SetActive(true);
+        atacando = false;
+        NadaButt.SetActive(false);
+    }
+    public void NoHabilidad()
+    {
+        Camera.main.orthographicSize = camaraHeight;
+        Camera.main.transform.position = camPos;
+        var habilidad = gObj.GetComponent<Habilidad>();
+        var script = gObj.GetComponent<Personajes>();
+        habilidad.personajes.Clear();
+        habilidad.casillas.Clear();
+        radio = false;
+        script.mago.turno = false;
+        gObj = null;
+        MostarAEbut.SetActive(true);
+        HabilidadBut.SetActive(false);
     }
 }
