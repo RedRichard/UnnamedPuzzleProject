@@ -134,21 +134,39 @@ public class Habilidad : MonoBehaviour {
         switch (habilidad)
         {
             case "Swap":
+                Pathfalse(objetivo);       
                 posicion = gameObject.transform.position;
                 gameObject.transform.parent.transform.position = objetivo.transform.parent.transform.position;
                 objetivo.transform.parent.transform.position = posicion;
+                Pathtrue(objetivo);
                 break;
             case "Smite":
+                Pathfalse(objetivo);
                 objetivo.transform.parent.transform.position = casillas[personajes.IndexOf(objetivo)];
+                Pathtrue(objetivo);
                 break;
             case "Draw Back":
+                Pathfalse(objetivo);
                 objetivo.transform.parent.transform.position = casillas[personajes.IndexOf(objetivo)];
+                Pathtrue(objetivo);
                 break;
             case "Shove":
+                Pathfalse(objetivo);
                 objetivo.transform.parent.transform.position = casillas[personajes.IndexOf(objetivo)];
+                Pathtrue(objetivo);
                 break;
             default:
                 break;
         }
+    }
+    void Pathfalse(GameObject objetivo)
+    {
+        objetivo.GetComponentInParent<Pathfinding.AILerp>().enabled = false;
+        gameObject.GetComponentInParent<Pathfinding.AILerp>().enabled = false;       
+    }
+    void Pathtrue(GameObject objetivo)
+    {
+        objetivo.GetComponentInParent<Pathfinding.AILerp>().enabled = true;     
+        gameObject.GetComponentInParent<Pathfinding.AILerp>().enabled = true;
     }
 }

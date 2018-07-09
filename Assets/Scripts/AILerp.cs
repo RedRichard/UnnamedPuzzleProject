@@ -363,11 +363,8 @@ namespace Pathfinding {
 		 * and override the function in that script.
 		 */
 		public virtual void OnTargetReached () {
-            this.gameObject.transform.GetChild(0).localPosition = new Vector3();
-            this.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
-            Vector3 pos= this.gameObject.transform.position;
-            pos.z = -1;
-            this.gameObject.transform.position = pos;
+            var script = GameObject.Find("MovementC").GetComponent<Touch>();
+            script.Setpos();
         }
 
 		/** Called when a requested path has finished calculation.

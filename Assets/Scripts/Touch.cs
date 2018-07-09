@@ -93,44 +93,11 @@ public class Touch : MonoBehaviour {
         {
             var astar = gObjParent.GetComponent<Pathfinding.AILerp>();
             astar.SearchPath();
-            // Vector3 moverPos = gObj.transform.position;
-            // moverPos.z = -1;
-            // gObjParent.transform.position = moverPos;
             gObj.GetComponent<SpriteRenderer>().enabled = false;
-           // gObj.transform.localPosition = new Vector3();
             GameObject posibles = GameObject.Find("Posibles");
             for (int i = 0; i < posibles.transform.childCount; i++)
             {
                 Destroy(posibles.transform.GetChild(i).gameObject);
-            }
-            var script= gObj.GetComponent<Personajes>();
-            script.Lista.Clear();
-            atacando=script.ChecarR();
-            if (atacando)
-            {
-                Camera.main.orthographicSize = 3;
-                Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
-                NoataqueBut.SetActive(true);
-            }
-            var habilidad = gObj.GetComponent<Habilidad>();
-            radio = habilidad.ChecarRadio();
-            if (radio)
-            {
-                Camera.main.orthographicSize = 3;
-                Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
-                HabilidadBut.SetActive(true);
-            }
-            if(atacando && radio)
-            {
-                HabilidadBut.SetActive(false);
-                NoataqueBut.SetActive(false);
-                NadaButt.SetActive(true);
-            }
-            if(!atacando && !radio)
-            {
-                script.mago.turno = false;
-                gObj = null;
-                MostarAEbut.SetActive(true);
             }
             
         }
@@ -141,6 +108,44 @@ public class Touch : MonoBehaviour {
         {
             enemigo.QuitarAtacZone();
         }
+    }
+    public void Setpos()
+    {
+        Vector3 moverPos = gObjParent.transform.position;
+        moverPos.z = -1;
+        gObjParent.transform.position = moverPos;
+        gObj.transform.localPosition = new Vector3();
+        gObj.GetComponent<SpriteRenderer>().enabled = true;
+        var script = gObj.GetComponent<Personajes>();
+        script.Lista.Clear();
+        atacando = script.ChecarR();
+        if (atacando)
+        {
+            Camera.main.orthographicSize = 3;
+            Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
+            NoataqueBut.SetActive(true);
+        }
+        var habilidad = gObj.GetComponent<Habilidad>();
+        radio = habilidad.ChecarRadio();
+        if (radio)
+        {
+            Camera.main.orthographicSize = 3;
+            Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
+            HabilidadBut.SetActive(true);
+        }
+        if (atacando && radio)
+        {
+            HabilidadBut.SetActive(false);
+            NoataqueBut.SetActive(false);
+            NadaButt.SetActive(true);
+        }
+        if (!atacando && !radio)
+        {
+            script.mago.turno = false;
+            gObj = null;
+            MostarAEbut.SetActive(true);
+        }
+
     }
     public void CancelarBut()
     {
