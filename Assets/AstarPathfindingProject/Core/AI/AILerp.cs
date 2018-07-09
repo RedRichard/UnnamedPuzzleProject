@@ -364,11 +364,10 @@ namespace Pathfinding {
 		 */
 		public virtual void OnTargetReached () {
             this.gameObject.transform.GetChild(0).localPosition = new Vector3();
-            GameObject posibles = GameObject.Find("Posibles");
-            for (int i = 0; i < posibles.transform.childCount; i++)
-            {
-                Destroy(posibles.transform.GetChild(i).gameObject);
-            }
+            this.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
+            Vector3 pos= this.gameObject.transform.position;
+            pos.z = -1;
+            this.gameObject.transform.position = pos;
         }
 
 		/** Called when a requested path has finished calculation.

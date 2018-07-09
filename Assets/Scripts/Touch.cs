@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
-
+using Pathfinding.Util;
 public class Touch : MonoBehaviour {
+
     GameObject gObj, gObjParent,enemigoSelected;
     float camaraHeight;
     Vector3 camPos;
@@ -90,10 +91,13 @@ public class Touch : MonoBehaviour {
          */
         if (gObj != null)
         {
-            Vector3 moverPos = gObj.transform.position;
-            moverPos.z = -1;
-            gObjParent.transform.position = moverPos;
-            gObj.transform.localPosition = new Vector3();
+            var astar = gObjParent.GetComponent<Pathfinding.AILerp>();
+            astar.SearchPath();
+            // Vector3 moverPos = gObj.transform.position;
+            // moverPos.z = -1;
+            // gObjParent.transform.position = moverPos;
+            gObj.GetComponent<SpriteRenderer>().enabled = false;
+           // gObj.transform.localPosition = new Vector3();
             GameObject posibles = GameObject.Find("Posibles");
             for (int i = 0; i < posibles.transform.childCount; i++)
             {
