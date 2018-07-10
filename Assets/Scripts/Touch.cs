@@ -118,7 +118,7 @@ public class Touch : MonoBehaviour {
         atacando = script.ChecarR();
         if (atacando)
         {
-            Camera.main.orthographicSize = 5;
+            Camera.main.orthographicSize = 4.5f;
             Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
             NoataqueBut.SetActive(true);
         }
@@ -126,7 +126,7 @@ public class Touch : MonoBehaviour {
         radio = habilidad.ChecarRadio();
         if (radio)
         {
-            Camera.main.orthographicSize = 5;
+            Camera.main.orthographicSize = 4.5f;
             Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
             HabilidadBut.SetActive(true);
         }

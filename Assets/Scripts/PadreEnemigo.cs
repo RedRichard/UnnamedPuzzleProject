@@ -34,7 +34,7 @@ public class PadreEnemigo : MonoBehaviour {
             puestos = Casillas.Count;
             contador++;
         }
-        if (contador < ataque)
+        if (contador < ataque && Casillas.Count>0)
         {
             quitados++;
             MostrarAtaque(Casillas.Dequeue(), ataque, Casillas, contador,enemigo);
@@ -70,7 +70,10 @@ public class PadreEnemigo : MonoBehaviour {
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null)
         {
-            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Board")
+            {
+                Casillas.Enqueue(inicio);
+            }
             if (hit2D.transform.tag == "Player")
             {
                 jugadores.Enqueue(inicio);
@@ -81,7 +84,10 @@ public class PadreEnemigo : MonoBehaviour {
         hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null)
         {
-            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Board")
+            {
+                Casillas.Enqueue(inicio);
+            }
             if (hit2D.transform.tag == "Player")
             {
                 jugadores.Enqueue(inicio);
@@ -92,7 +98,10 @@ public class PadreEnemigo : MonoBehaviour {
         hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null)
         {
-            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Board")
+            {
+                Casillas.Enqueue(inicio);
+            }
             if (hit2D.transform.tag == "Player")
             {
                 jugadores.Enqueue(inicio);
@@ -103,7 +112,10 @@ public class PadreEnemigo : MonoBehaviour {
         hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null)
         {
-            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Board")
+            {
+                Casillas.Enqueue(inicio);
+            }
             if (hit2D.transform.tag == "Player")
             {
                 jugadores.Enqueue(inicio);
@@ -115,7 +127,7 @@ public class PadreEnemigo : MonoBehaviour {
             puestos = Casillas.Count;
             contador++;
         }
-        if (contador < ataque)
+        if (contador < ataque && Casillas.Count>0)
         {
             quitados++;
             prueba = ChecarRadio(Casillas.Dequeue(), ataque, Casillas, contador, jugadores);
