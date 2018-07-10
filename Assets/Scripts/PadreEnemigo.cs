@@ -42,6 +42,7 @@ public class PadreEnemigo : MonoBehaviour {
         contador = 0;
         quitados = 0;
         puestos = 0;
+        Casillas.Clear();
     }
     public void InstanciarAtaque(Queue<Vector3> Casillas, Vector3 inicio,GameObject enemigo)
     {
@@ -122,6 +123,7 @@ public class PadreEnemigo : MonoBehaviour {
         contador = 0;
         quitados = 0;
         puestos = 0;
+        Casillas.Clear();
         if (jugadores.Count > 0)
         {
             prueba = true;

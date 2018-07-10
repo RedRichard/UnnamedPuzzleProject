@@ -17,7 +17,7 @@ public class Enemigo : PadreEnemigo {
     public void MostrarR()
     {
         int cont = 0;
-        MostrarAtaque(transform.position, enemigo.rangoAtaque, ataquezona, cont, this.gameObject);
+        MostrarAtaque(enemigo.posicion, enemigo.rangoAtaque, ataquezona, cont, this.gameObject);
         ataquezona.Clear();
     }
     public void Atacar()
