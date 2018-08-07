@@ -49,6 +49,7 @@ public class Touch : MonoBehaviour {
                     gObj = hit2D.transform.gameObject;//se guarda el objeto con el que el ray choco
                     gObjParent = hit2D.transform.parent.transform.gameObject; //Guardamos al Jugador
                     gObj.GetComponent<Personajes>().Tocado();
+                    gObj.GetComponent<SpriteRenderer>().enabled = true;
                     MoverButt.SetActive(true);
                     CancelarButt.SetActive(true);
                     MostarAEbut.SetActive(false);
@@ -79,7 +80,6 @@ public class Touch : MonoBehaviour {
     {
         Ray2D ray = new Ray2D(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Camera.main.transform.forward);
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red, 1);
         return hit2D;
     }
     public void MoverBut()
@@ -98,8 +98,7 @@ public class Touch : MonoBehaviour {
             for (int i = 0; i < posibles.transform.childCount; i++)
             {
                 Destroy(posibles.transform.GetChild(i).gameObject);
-            }
-            
+            }          
         }
         CancelarButt.SetActive(false);
         MoverButt.SetActive(false);
@@ -112,7 +111,6 @@ public class Touch : MonoBehaviour {
     public void Setpos()
     {
         gObj.transform.localPosition = new Vector3();
-        gObj.GetComponent<SpriteRenderer>().enabled = true;
         var script = gObj.GetComponent<Personajes>();
         script.Lista.Clear();
         atacando = script.ChecarR();
