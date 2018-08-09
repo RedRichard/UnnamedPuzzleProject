@@ -1,18 +1,11 @@
 ﻿using UnityEngine;
-using Pathfinding.Util;
+
 public class Touch : MonoBehaviour {
 
     GameObject gObj, gObjParent,enemigoSelected;
-    float camaraHeight;
-    Vector3 camPos;
-    public GameObject Controlador;
-    bool atacando=false,radio=false;
-    public GameObject MoverButt, CancelarButt, HabilidadBut, NoataqueBut,MostarAEbut,NadaButt;
-    private void Awake()
-    {
-        camaraHeight = Camera.main.orthographicSize;
-        camPos = Camera.main.transform.position;
-    }
+    bool atacando=false,radio=false, areaAtaque=false;
+    public GameObject MoverButt, CancelarButt, HabilidadBut, NoataqueBut,MostarAEbut,NadaButt, Controlador;
+    public Camera atacaCamara;
     void FixedUpdate () {
         Controlador.GetComponent<ControladorTurno>().ChecarTurno();
         if (Controlador.GetComponent<ControladorTurno>().turnoJugadores)
@@ -48,6 +41,7 @@ public class Touch : MonoBehaviour {
                 {
                     gObj = hit2D.transform.gameObject;//se guarda el objeto con el que el ray choco
                     gObjParent = hit2D.transform.parent.transform.gameObject; //Guardamos al Jugador
+                    gObj.transform.localPosition = new Vector3();
                     gObj.GetComponent<Personajes>().Tocado();
                     gObj.GetComponent<SpriteRenderer>().enabled = true;
                     MoverButt.SetActive(true);
@@ -116,16 +110,12 @@ public class Touch : MonoBehaviour {
         atacando = script.ChecarR();
         if (atacando)
         {
-            Camera.main.orthographicSize = 4.5f;
-            Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
             NoataqueBut.SetActive(true);
         }
         var habilidad = gObj.GetComponent<Habilidad>();
         radio = habilidad.ChecarRadio();
         if (radio)
         {
-            Camera.main.orthographicSize = 4.5f;
-            Camera.main.transform.position = new Vector3(gObj.transform.position.x, gObj.transform.position.y, Camera.main.transform.position.z);
             HabilidadBut.SetActive(true);
         }
         if (atacando && radio)
@@ -140,7 +130,6 @@ public class Touch : MonoBehaviour {
             gObj = null;
             MostarAEbut.SetActive(true);
         }
-
     }
     public void CancelarBut()
     {
@@ -160,14 +149,11 @@ public class Touch : MonoBehaviour {
         MostarAEbut.SetActive(true);
         MoverButt.SetActive(false);
         CancelarButt.SetActive(false);
-
     }
     public void NoAtacar()
     {
         NoataqueBut.SetActive(false);
         HabilidadBut.SetActive(false);
-        Camera.main.orthographicSize = camaraHeight;
-        Camera.main.transform.position = camPos;
         var script = gObj.GetComponent<Personajes>();
         script.enemigos.Clear();
         script.Lista.Clear();
@@ -190,12 +176,11 @@ public class Touch : MonoBehaviour {
             RaycastHit2D hit2D = GenerarRay();
             if (hit2D && script.enemigos.Contains(hit2D.collider.gameObject))
             {
+                atacaCamara.enabled = true;
                 Destroy(hit2D.collider.gameObject.transform.parent.gameObject);
                 atacando = false;
                 radio = false;
                 NoataqueBut.SetActive(false);
-                Camera.main.orthographicSize = camaraHeight;
-                Camera.main.transform.position = camPos;
                 script.enemigos.Clear();
                 script.Lista.Clear();
                 var habilidad = gObj.GetComponent<Habilidad>();
@@ -213,10 +198,23 @@ public class Touch : MonoBehaviour {
     }
     public void MostrarAe()
     {
-        var Enemigos = FindObjectsOfType<Enemigo>();
-        foreach(Enemigo enemigo in Enemigos)
+        if (!areaAtaque)
         {
-            enemigo.MostrarR();
+            var Enemigos = FindObjectsOfType<Enemigo>();
+            foreach (Enemigo enemigo in Enemigos)
+            {
+                enemigo.MostrarR();
+            }
+            areaAtaque = !areaAtaque;
+        }
+        else
+        {
+            var Enemigos = FindObjectsOfType<Enemigo>();
+            foreach (Enemigo enemigo in Enemigos)
+            {
+                enemigo.QuitarAtacZone();
+            }
+            areaAtaque = !areaAtaque;
         }
     }
     void UsarHabilidad()
@@ -241,15 +239,11 @@ public class Touch : MonoBehaviour {
                 script.Lista.Clear();
                 script.mago.turno = false;
                 gObj = null;
-                Camera.main.orthographicSize = camaraHeight;
-                Camera.main.transform.position = camPos;
             }
         }
     }
     public void Nada()
     {
-        Camera.main.orthographicSize = camaraHeight;
-        Camera.main.transform.position = camPos;
         var script = gObj.GetComponent<Personajes>();
         script.enemigos.Clear();
         script.Lista.Clear();
@@ -265,8 +259,6 @@ public class Touch : MonoBehaviour {
     }
     public void NoHabilidad()
     {
-        Camera.main.orthographicSize = camaraHeight;
-        Camera.main.transform.position = camPos;
         var habilidad = gObj.GetComponent<Habilidad>();
         var script = gObj.GetComponent<Personajes>();
         habilidad.personajes.Clear();
