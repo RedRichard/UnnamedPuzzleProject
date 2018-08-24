@@ -156,7 +156,7 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 ba3be7c0ab2fb037b639c3016a251697 Assembly-CSharp.dll:Pathfinding.RelevantGraphSurface
-4e4f25432cfad1896a2d978e4e5e1362 Assembly-CSharp.dll:.Touch
+5fed1deac954b8f77b0bf17ee455e87d Assembly-CSharp.dll:.Touch
 e6f7c59fd2af8a26b0e8e0a40f81f91b Assembly-CSharp.dll:Pathfinding.Seeker
 9c0dd38c1e3010f4d56fb251074b0f27 Assembly-CSharp.dll:Pathfinding.UnityReferenceHelper
 fa701de4c8e5a4fa795049ccfb143352 Assembly-CSharp.dll:Pathfinding.Examples.TurnBasedAI
@@ -168,3 +168,4 @@ ad0f126fcba09821bc39d20a791e1921 Assembly-CSharp.dll:Pathfinding.NodeLink3
 4493ff9f244bc8a56db0486bc36d701b Assembly-CSharp.dll:Pathfinding.AnimationLink
 ab8f67d799c8d9d5cf19412a57d68d83 Assembly-CSharp.dll:.PadreEnemigo
 19a2d373917440e586822a94c4b79119 Assembly-CSharp.dll:Pathfinding.Patrol
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.AtaqueCamara
