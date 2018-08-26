@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4110745458604458}
   - component: {fileID: 212390671658786552}
   - component: {fileID: 95682524010995706}
+  - component: {fileID: 111906587555336702}
   m_Layer: 0
   m_Name: GeorgieBig
   m_TagString: Untagged
@@ -58,6 +59,20 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!111 &111906587555336702
+Animation:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1544868085248752}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!212 &212390671658786552
 SpriteRenderer:
   m_ObjectHideFlags: 1

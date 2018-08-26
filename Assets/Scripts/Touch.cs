@@ -177,7 +177,7 @@ public class Touch : MonoBehaviour {
             if (hit2D && script.enemigos.Contains(hit2D.collider.gameObject))
             {
                 atacaCamara.enabled = true;
-                GameObject.Find("Camera").GetComponent<AtaqueCamara>().PlayAnimationsAttack(gObj.name);
+                StartCoroutine( GameObject.Find("Camera").GetComponent<AtaqueCamara>().PlayAnimationsAttack(gObjParent.name));
                 Destroy(hit2D.collider.gameObject.transform.parent.gameObject);
                 atacando = false;
                 radio = false;
