@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Personajes : PersonajeJugable {
@@ -7,14 +6,14 @@ public class Personajes : PersonajeJugable {
     public Queue<Vector3> Lista = new Queue<Vector3>();
     public List<GameObject> enemigos = new List<GameObject>();
     public int Pasos, Ataque;
-    public string enemigo;
+    public string enemigo,habilidad;
     public void Awake () {
         mago= new Personaje(transform.position,Pasos,Ataque,true,enemigo);
 	}
    public  void Tocado() {
         if (mago.turno) {
             int contador = 0;
-            MostrarPosiblesPasos(mago.posicion, Lista, contador,mago.maxPasos);
+            MostrarPosiblesPasos(gameObject.transform.position, Lista, contador,mago.maxPasos);
             quitados++;
             if (Lista.Count > 0)
             {

@@ -77,6 +77,8 @@ public class PersonajeJugable : MonoBehaviour {
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null && hit2D.transform.tag == "Board")
         {
+            inicio.y=Mathf.RoundToInt(inicio.y);
+            inicio.x = Mathf.RoundToInt(inicio.x);
             Casillas.Enqueue(inicio);
             Instantiate(Resources.Load("posibles"), inicio, Quaternion.identity, GameObject.Find("Posibles").transform);
         }
@@ -87,6 +89,8 @@ public class PersonajeJugable : MonoBehaviour {
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null)
         {
+            inicio.y = Mathf.RoundToInt(inicio.y);
+            inicio.x = Mathf.RoundToInt(inicio.x);
             if (hit2D.transform.tag == "Board")
             {
                 Casillas.Enqueue(inicio);
@@ -111,7 +115,10 @@ public class PersonajeJugable : MonoBehaviour {
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null)
         {
-            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Board")
+            {
+                Casillas.Enqueue(inicio);
+            }
             if (hit2D.collider.tag == "Enemigo")
             {
                 if (!Enemigos.Contains(hit2D.collider.gameObject))
@@ -125,7 +132,10 @@ public class PersonajeJugable : MonoBehaviour {
         hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null)
         {
-            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Board")
+            {
+                Casillas.Enqueue(inicio);
+            }
             if (hit2D.collider.tag == "Enemigo")
             {
                 if (!Enemigos.Contains(hit2D.collider.gameObject))
@@ -139,7 +149,10 @@ public class PersonajeJugable : MonoBehaviour {
         hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null)
         {
-            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Board")
+            {
+                Casillas.Enqueue(inicio);
+            }
             if (hit2D.collider.tag == "Enemigo")
             {
                 if (!Enemigos.Contains(hit2D.collider.gameObject))
@@ -153,7 +166,10 @@ public class PersonajeJugable : MonoBehaviour {
         hit2D = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit2D.collider != null)
         {
-            Casillas.Enqueue(inicio);
+            if (hit2D.collider.tag == "Board")
+            {
+                Casillas.Enqueue(inicio);
+            }
             if (hit2D.collider.tag == "Enemigo")
             {
                 if (!Enemigos.Contains(hit2D.collider.gameObject))
