@@ -3,7 +3,8 @@
 public class Touch : MonoBehaviour {
 
     GameObject gObj, gObjParent,enemigoSelected;
-    bool atacando=false,radio=false, areaAtaque=false;
+    bool atacando=false,radio=false;
+    public bool areaAtaque = false;
     public GameObject MoverButt, CancelarButt, HabilidadBut, NoataqueBut,MostarAEbut,NadaButt, Controlador;
     public Camera atacaCamara;
     void FixedUpdate () {
@@ -198,9 +199,9 @@ public class Touch : MonoBehaviour {
     }
     public void MostrarAe()
     {
+        var Enemigos = FindObjectsOfType<Enemigo>();
         if (!areaAtaque)
         {
-            var Enemigos = FindObjectsOfType<Enemigo>();
             foreach (Enemigo enemigo in Enemigos)
             {
                 enemigo.MostrarR();
@@ -209,7 +210,6 @@ public class Touch : MonoBehaviour {
         }
         else
         {
-            var Enemigos = FindObjectsOfType<Enemigo>();
             foreach (Enemigo enemigo in Enemigos)
             {
                 enemigo.QuitarAtacZone();

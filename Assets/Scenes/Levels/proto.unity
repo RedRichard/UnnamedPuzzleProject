@@ -1087,6 +1087,11 @@ Prefab:
       propertyPath: turnoJugadores
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114160673174624818, guid: ff73368f1ead124409c30799ce96b915,
+        type: 2}
+      propertyPath: touchScript
+      value: 
+      objectReference: {fileID: 1013435937}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff73368f1ead124409c30799ce96b915, type: 2}
   m_IsPrefabParent: 0
@@ -2394,6 +2399,11 @@ Prefab:
         type: 2}
       propertyPath: m_AnchoredPosition.y
       value: -2.8000183
+      objectReference: {fileID: 0}
+    - target: {fileID: 224908822693436746, guid: d8a3bb4bff0355c4a8494b56f6e84dc5,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -4.5999985
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d8a3bb4bff0355c4a8494b56f6e84dc5, type: 2}
